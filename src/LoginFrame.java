@@ -80,7 +80,7 @@ public class LoginFrame extends JFrame{
                     dispose();
 
                     //ABRIENDO VENTANA DE ADMINISTRADOR
-                    //new AdminFrame();
+                    new AdminFrame();
                 }else{
                     lblError.setText("Usuario o contraseña incorrectos, intentalo de nuevo");
                 }
