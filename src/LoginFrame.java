@@ -82,7 +82,7 @@ public class LoginFrame extends JFrame{
                     //ABRIENDO VENTANA DE ADMINISTRADOR
                     new AdminFrame();
                 }else{
-                    lblError.setText("Usuario o contraseña incorrectos, intentalo de nuevo");
+                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos, intentalo de nuevo", "Inicio de sesión fallido", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
