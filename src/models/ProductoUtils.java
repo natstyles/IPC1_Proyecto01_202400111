@@ -73,4 +73,58 @@ public class ProductoUtils {
 
         return productos;
     }
+
+    //METODO PARA GENERAR REPORTE DE TOP 5 PRODUCTOS MAS VENDIDOS
+    public static void generarReporteHTML(List<Producto> listaProductos, String rutaArchivo){
+        try{
+            //ORDENAMIENTO BURBUJA
+            for(int i = 0; i < listaProductos.size() -1; i++){
+                for(int j = 0; j < listaProductos.size() - i - 1; j++){
+                    //if(listaProductos.get(j).getVentas() < listaProductos.get(j + 1).getVentas()){
+                        //INTERCAMBIAR PRODUCTOS
+                        //Producto temp = listaProductos.get(j);
+                        //listaProductos.set(j, listaProductos.get(j + 1));
+                        //listaProductos.set(j + 1, temp);
+                    //}
+                }
+            }
+
+            //CREAR ARCHIVO HTML
+            try(PrintWriter writer = new PrintWriter(rutaArchivo)){
+                writer.println("<!DOCTYPE html>");
+                writer.println("<html lang='es'>");
+                writer.println("<head>");
+                writer.println("<meta charset='UTF-8'>");
+                writer.println("<title>Reporte de Productos Más Vendidos</title>");
+                writer.println("<style>");
+                writer.println("table {width: 50%; margin: 20px auto; border-collapse: collapse;}");
+                writer.println("th, td {border: 1px solid #ddd; padding: 8px; text-align: center;}");
+                writer.println("th {background-color: #f2f2f2;}");
+                writer.println("h1 {text-align: center;}");
+                writer.println("</style>");
+                writer.println("</head>");
+                writer.println("<body>");
+                writer.println("<h1>Reporte de Productos Más Vendidos</h1>");
+                writer.println("<table>");
+                writer.println("<tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Ventas</th></tr>");
+
+                //MOSTRAR LOS 5 PRODUCTOS MAS VENDIDOS
+                int limite = Math.min(5, listaProductos.size());
+                for(int i = 0; i < limite; i++){
+                    Producto p = listaProductos.get(i);
+                    //writer.printf("<tr><td>%s</td><td>Q%.2f</td><td>%d</td><td>%d</td></tr>%n",
+                            //p.getNombre(), p.getPrecio(), p.getStock(), p.getVentas());
+                }
+
+                writer.println("</table>");
+                writer.println("</body>");
+                writer.println("</html>");
+
+            }
+            System.out.println("Reporte generado con éxito en: " + rutaArchivo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al generar el reporte: " + e.getMessage());
+        }
+    }
 }

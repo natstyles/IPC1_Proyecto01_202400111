@@ -104,6 +104,21 @@ public class ProductosFrame extends JFrame {
             new EliminarProductosFrame(listaProductos, tablaProductos);
         });
 
+        //ACCIÓN DE BOTON DE REPORTE DE PRODUCTOS MÁS VENDIDOS
+        btnReporteProductos.addActionListener(e -> {
+            String rutaArchivo = "reporte_top5Productos.html";
+            ProductoUtils.generarReporteHTML(listaProductos, rutaArchivo);
+            JOptionPane.showMessageDialog(this, "Reporte generado en: " + rutaArchivo, "Reporte generado", JOptionPane.INFORMATION_MESSAGE);
+
+        //ABRIR EL ARCHIVO DE FORMA AUTOMÁTICA
+        try{
+            Desktop.getDesktop().browse(new java.io.File(rutaArchivo).toURI());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "No se pudo abrir el reporte.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        });
+
 
         setLocationRelativeTo(null);
         setVisible(true);
