@@ -30,7 +30,6 @@ public class ProductosFrame extends JFrame {
         JLabel lblTitulo = new JLabel("Módulo de productos", JLabel.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
         mainPanel.add(lblTitulo, BorderLayout.NORTH);
-        ;
 
 
         //TABLA DE PRODUCTOS
@@ -62,7 +61,6 @@ public class ProductosFrame extends JFrame {
         JButton btnRegresar = new JButton("Volver al módulo de administración");
         btnRegresar.addActionListener(e -> {
             dispose();
-            new AdminFrame(); // Regresar al módulo de administrador
         });
 
         mainPanel.add(btnRegresar, BorderLayout.SOUTH);
@@ -100,6 +98,12 @@ public class ProductosFrame extends JFrame {
                 new EditarProductoFrame(listaProductos, tablaProductos);
             }
         });
+
+        //ACCIÓN DE BOTON DE ELIMINAR PRODUCTO
+        btnEliminarProducto.addActionListener(e -> {
+            new EliminarProductosFrame(listaProductos, tablaProductos);
+        });
+
 
         setLocationRelativeTo(null);
         setVisible(true);

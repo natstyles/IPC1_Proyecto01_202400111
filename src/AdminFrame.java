@@ -99,7 +99,6 @@ public class AdminFrame extends JFrame {
         btnCerrarSesion.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "Cerrando sesión", "Cerrando sesión", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-            new LoginFrame();
         });
 
         //CENTRAR Y MOSTRAR VENTANA

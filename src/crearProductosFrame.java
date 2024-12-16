@@ -23,7 +23,7 @@ public class crearProductosFrame extends JFrame{
 
         //CONFIG VENTANA
         setTitle("Creación de Productos");
-        setSize(400, 300);
+        setSize(420, 250);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -32,25 +32,27 @@ public class crearProductosFrame extends JFrame{
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        //TITULO
-        JLabel lblTitulo = new JLabel("Crear Producto", JLabel.CENTER);
+        // PANEL PARA EL TITULO (CENTRADO)
+        JPanel titlePanel = new JPanel(new GridBagLayout());
+        JLabel lblTitulo = new JLabel("Crear Producto");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-        mainPanel.add(lblTitulo);
-
-        mainPanel.add(Box.createVerticalStrut(20)); // Espacio vertical (15 píxeles)
+        titlePanel.add(lblTitulo);
+        mainPanel.add(Box.createVerticalStrut(5)); // Reducir espacio superior
+        mainPanel.add(titlePanel);
+        mainPanel.add(Box.createVerticalStrut(10)); // Reducir espacio inferior
 
         //CAMPO DEL NOMBRE DE PRODUCTO
         JPanel nombrePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel lblNombre = new JLabel("Nombre de producto: ");
-        JTextField txtNombre = new JTextField(20);
+        txtNombre = new JTextField(20);
         nombrePanel.add(lblNombre);
         nombrePanel.add(txtNombre);
         mainPanel.add(nombrePanel);
 
-        //CAMPRO DE PRECIO DE PRODUCTO
+        //CAMPO DE PRECIO DE PRODUCTO
         JPanel precioPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel lblPrecio = new JLabel("Precio: ");
-        JTextField txtPrecio = new JTextField(20);
+        txtPrecio = new JTextField(20);
         precioPanel.add(lblPrecio);
         precioPanel.add(txtPrecio);
         mainPanel.add(precioPanel);
@@ -58,16 +60,15 @@ public class crearProductosFrame extends JFrame{
         //CAMPO DE CANTIDAD DE PRODUCTO
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel lblStock = new JLabel("Cantidad: ");
-        JTextField txtStock = new JTextField(20);
+        txtStock = new JTextField(20);
         stockPanel.add(lblStock);
         stockPanel.add(txtStock);
         mainPanel.add(stockPanel);
 
-        //BOTON PARA CREARE PRODUCTO
+        //BOTON PARA CREAR PRODUCTO
         JButton btnCrear = new JButton("Crear Producto");
-        //CENTRAR BOTON
         btnCrear.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(Box.createRigidArea(new Dimension(550, 10))); // Espacio antes del botón
+        mainPanel.add(Box.createVerticalStrut(10)); // Espacio antes del botón
         mainPanel.add(btnCrear);
 
         //ETIQUETA DE ERROR
