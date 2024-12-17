@@ -132,7 +132,7 @@ public class crearProductosFrame extends JFrame{
                 }
 
                 //GUARDAR PRODUCTO
-                Producto nuevoProducto = new Producto(nombre, precio, stock);
+                Producto nuevoProducto = new Producto(nombre, precio, stock, 0);
                 listaProductos.add(nuevoProducto);
 
                 //ACTUALIZAR TABLA

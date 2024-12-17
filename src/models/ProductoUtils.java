@@ -11,12 +11,15 @@ import java.util.List;
 public class ProductoUtils {
 
     //METODO PARA GUARDAR PRODUCTOS EN UN ARCHIVO CSV
-
     public static void guardarProductosDesdeArchivo(List<Producto> productos, String rutaArchivo) {
         try (PrintWriter writer = new PrintWriter(new File(rutaArchivo))) {
-            writer.println("nombre;precio;stock");
+            //Escribir encabezado
+            writer.println("nombre;precio;stock;ventas");
+
+            //Escribir cada producto con el campo ventas incluido
             for (Producto producto : productos) {
-                writer.printf("%s;%.2f;%d%n", producto.getNombre(), producto.getPrecio(), producto.getStock());
+                writer.println(producto.getNombre() + ";" + producto.getPrecio() + ";" +
+                        producto.getStock() + ";" + producto.getVentas());
             }
         } catch (IOException e) {
             System.out.println("Error al guardar productos: " + e.getMessage());
@@ -24,55 +27,54 @@ public class ProductoUtils {
     }
 
     //METODO PARA CARGAR PRODUCTOS DESDE UN ARCHIVO CSV
-
-    public static List<Producto> cargarProductosDesdeArchivo(String rutaArchivo){
+    public static List<Producto> cargarProductosDesdeArchivo(String rutaArchivo) {
         List<Producto> productos = new ArrayList<>();
-
         File archivo = new File(rutaArchivo);
 
-        if(!archivo.exists()){
-            System.out.println("El archivo no existe: "+ rutaArchivo);
+        if (!archivo.exists()) {
+            System.out.println("El archivo no existe: " + rutaArchivo);
             return productos;
         }
 
-        try(BufferedReader br = new BufferedReader(new FileReader(archivo))){
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
 
-            //TAG PARA IDENTIFICAR LA PRIMERA LINEA
+            //TAG PARA IDENTIFICAR LA PRIMERA LÍNEA
             boolean primeraLinea = true;
 
-            while ((linea = br.readLine()) != null){
-
-                if(primeraLinea){
-                    primeraLinea = false;
+            while ((linea = br.readLine()) != null) {
+                if (primeraLinea) {
+                    primeraLinea = false; //Saltar encabezado
                     continue;
                 }
 
                 String[] partes = linea.split(";");
 
-                if(partes.length == 3){
-                    //ASEGURARSE QUE TIENE 3 COLUMNAS
-                    try{
+                if (partes.length == 4) { //Asegurarse de que la línea tenga todos los campos
+                    try {
                         String nombre = partes[0].trim();
                         double precio = Double.parseDouble(partes[1].trim());
                         int stock = Integer.parseInt(partes[2].trim());
+                        int ventas = Integer.parseInt(partes[3].trim());
 
-                        //Crear y añadir productos a a lista
-                        Producto producto = new Producto(nombre, precio, stock);
+                        //Crear y añadir el producto con el contador de ventas
+                        Producto producto = new Producto(nombre, precio, stock, ventas);
+                        producto.incrementarVentas(ventas); //Asignar las ventas existentes
                         productos.add(producto);
-                    } catch (RuntimeException e) {
-                        System.out.println("Error en formato numérico en la linea: " + linea);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error en formato numérico en la línea: " + linea);
                     }
-                }else{
-                    System.out.println("Formato inválido en la linea: " + linea);
+                } else {
+                    System.out.println("Formato inválido en la línea: " + linea);
                 }
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
         }
 
         return productos;
     }
+
 
     //METODO PARA GENERAR REPORTE DE TOP 5 PRODUCTOS MAS VENDIDOS
     public static void generarReporteHTML(List<Producto> listaProductos, String rutaArchivo){

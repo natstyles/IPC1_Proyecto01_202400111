@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import models.Producto;
+import models.ProductoUtils;
 
 public class EditarProductoFrame extends JFrame{
     private List<Producto> listaProductos;
@@ -93,8 +94,8 @@ public class EditarProductoFrame extends JFrame{
 
         //ACCION AL ELEGIR UN PRODUCTO DEL COMBOBOX
         btnEditar.addActionListener(e -> {
-            int index = comboProductos.getSelectedIndex();
-            if (index >= 0) {
+            String productoSeleccionado = (String) comboProductos.getSelectedItem(); // Obtener nombre del producto
+            if (productoSeleccionado != null) {
                 try {
                     double nuevoPrecio = Double.parseDouble(txtPrecio.getText().trim());
                     int nuevoStock = Integer.parseInt(txtStock.getText().trim());
@@ -109,14 +110,28 @@ public class EditarProductoFrame extends JFrame{
                         return;
                     }
 
-                    // Actualizar producto
-                    Producto producto = listaProductos.get(index);
-                    producto.setPrecio(nuevoPrecio);
-                    producto.setStock(nuevoStock);
+                    // Buscar el producto por nombre
+                    for (Producto producto : listaProductos) {
+                        if (producto.getNombre().equals(productoSeleccionado)) {
+                            producto.setPrecio(nuevoPrecio);
+                            producto.setStock(nuevoStock);
+                            break;
+                        }
+                    }
 
                     // Reflejar cambios en la tabla
-                    ((DefaultTableModel) tablaProductos.getModel()).setValueAt(nuevoPrecio, index, 1);
-                    ((DefaultTableModel) tablaProductos.getModel()).setValueAt(nuevoStock, index, 2);
+                    DefaultTableModel modelo = (DefaultTableModel) tablaProductos.getModel();
+                    for (int i = 0; i < listaProductos.size(); i++) {
+                        Producto producto = listaProductos.get(i);
+                        if (producto.getNombre().equals(productoSeleccionado)) {
+                            modelo.setValueAt(nuevoPrecio, i, 1);
+                            modelo.setValueAt(nuevoStock, i, 2);
+                            break;
+                        }
+                    }
+
+                    // Guardar cambios en el archivo CSV
+                    ProductoUtils.guardarProductosDesdeArchivo(listaProductos, "productos.csv");
 
                     lblError.setText("");
                     JOptionPane.showMessageDialog(this, "Producto editado exitosamente");

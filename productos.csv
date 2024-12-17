@@ -1,2 +1,6 @@
-nombre;precio;stock
-Panes;5000.00;8
+nombre;precio;stock;ventas
+Pan;150.0;8;2
+Gatito;1500.0;10;0
+Perrito;5000.0;10;0
+DINOSAURIO;7500.0;9;1
+Panes;3000.0;10;0

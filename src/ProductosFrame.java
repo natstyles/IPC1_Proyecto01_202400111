@@ -31,7 +31,6 @@ public class ProductosFrame extends JFrame {
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
         mainPanel.add(lblTitulo, BorderLayout.NORTH);
 
-
         //TABLA DE PRODUCTOS
         String[] columnas = {"Producto", "Precio", "Stock"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
@@ -58,11 +57,12 @@ public class ProductosFrame extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.EAST);
 
         //PANEL INFERIOR
+        //BOTON DE REGRESO (DISPOSE Y ABRIR DE NUEVO EL ADMINFRAME)
         JButton btnRegresar = new JButton("Volver al módulo de administración");
         btnRegresar.addActionListener(e -> {
             dispose();
+            new AdminFrame();
         });
-
         mainPanel.add(btnRegresar, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -74,9 +74,7 @@ public class ProductosFrame extends JFrame {
         inicializarTabla();
 
         //ACCION DE BOTON DE CREAR PRODUCTO
-        btnCrearProducto.addActionListener(e -> {
-            new crearProductosFrame(listaProductos, tablaProductos);
-        });
+        btnCrearProducto.addActionListener(e -> new crearProductosFrame(listaProductos, tablaProductos));
 
         //ACCIÓN DE BOTON DE CARGA MASIVA
         btnCargaMasiva.addActionListener(e -> {
@@ -86,7 +84,6 @@ public class ProductosFrame extends JFrame {
             if (seleccion == JFileChooser.APPROVE_OPTION) {
                 File archivo = fileChooser.getSelectedFile();
                 cargarProductosDesdeArchivo(archivo);
-
             }
         });
 
@@ -100,9 +97,7 @@ public class ProductosFrame extends JFrame {
         });
 
         //ACCIÓN DE BOTON DE ELIMINAR PRODUCTO
-        btnEliminarProducto.addActionListener(e -> {
-            new EliminarProductosFrame(listaProductos, tablaProductos);
-        });
+        btnEliminarProducto.addActionListener(e -> new EliminarProductosFrame(listaProductos, tablaProductos));
 
         //ACCIÓN DE BOTON DE REPORTE DE PRODUCTOS MÁS VENDIDOS
         btnReporteProductos.addActionListener(e -> {
@@ -110,15 +105,13 @@ public class ProductosFrame extends JFrame {
             ProductoUtils.generarReporteHTML(listaProductos, rutaArchivo);
             JOptionPane.showMessageDialog(this, "Reporte generado en: " + rutaArchivo, "Reporte generado", JOptionPane.INFORMATION_MESSAGE);
 
-        //ABRIR EL ARCHIVO DE FORMA AUTOMÁTICA
-        try{
-            Desktop.getDesktop().browse(new java.io.File(rutaArchivo).toURI());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "No se pudo abrir el reporte.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+            try {
+                Desktop.getDesktop().browse(new java.io.File(rutaArchivo).toURI());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "No se pudo abrir el reporte.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
-
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -145,7 +138,7 @@ public class ProductosFrame extends JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
 
-            boolean primeraLinea = true; //Omitir primera linea
+            boolean primeraLinea = true; //Omitir primera linea (encabezado)
 
             int productosAgregados = 0;
             int productosIgnorados = 0;
@@ -156,25 +149,26 @@ public class ProductosFrame extends JFrame {
                     continue;
                 }
 
-
                 String[] partes = linea.split(";");
-                if (partes.length == 3) {
+                if (partes.length == 4) {
                     String nombre = partes[0].trim();
                     String precioTexto = partes[1].trim();
                     String stockTexto = partes[2].trim();
+                    String ventasTexto = partes[3].trim();
 
                     try {
                         double precio = Double.parseDouble(precioTexto);
                         int stock = Integer.parseInt(stockTexto);
+                        int ventas = Integer.parseInt(ventasTexto);
 
                         //VALIDACIONES
-                        if (precio <= 0 || stock < 0 || productoExiste(nombre)) {
+                        if (precio <= 0 || stock < 0 || ventas < 0 || productoExiste(nombre)) {
                             productosIgnorados++;
                             continue;
                         }
 
                         //CREAR Y AGREGAR PRODUCTO
-                        Producto producto = new Producto(nombre, precio, stock);
+                        Producto producto = new Producto(nombre, precio, stock, ventas);
                         listaProductos.add(producto);
                         productosAgregados++;
                     } catch (NumberFormatException e) {
@@ -205,9 +199,9 @@ public class ProductosFrame extends JFrame {
     }
 
     //METODO PARA VERIFICAR SI UN PRODUCTO YA EXISTE
-    private boolean productoExiste(String nombre){
-        for(Producto producto : listaProductos){
-            if(producto.getNombre().equalsIgnoreCase(nombre)){
+    private boolean productoExiste(String nombre) {
+        for (Producto producto : listaProductos) {
+            if (producto.getNombre().equalsIgnoreCase(nombre)) {
                 return true;
             }
         }

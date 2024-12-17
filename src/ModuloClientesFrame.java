@@ -15,7 +15,7 @@ public class ModuloClientesFrame extends JFrame{
 
         //CONFIGURAMOS VENTANA
         setTitle("Módulo Clientes");
-        setSize(400, 300);
+        setSize(400, 230);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 

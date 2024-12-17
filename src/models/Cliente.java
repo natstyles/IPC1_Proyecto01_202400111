@@ -30,4 +30,8 @@ public class Cliente {
     public void setComprasRealizadas(int compras) {
         this.comprasRealizadas = compras;
     }
+
+    public void incrementarCompras(int cantidad){
+        this.comprasRealizadas++;
+    }
 }

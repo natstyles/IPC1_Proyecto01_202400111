@@ -7,12 +7,14 @@ public class Producto {
     private String nombre;
     private double precio;
     private int stock;
+    private int ventas;
 
     //Constructor
-    public Producto(String nombre, double precio, int stock){
+    public Producto(String nombre, double precio, int stock, int ventas) {
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
+        this.ventas = ventas;
     }
 
     //Getters y Setters
@@ -38,6 +40,18 @@ public class Producto {
 
     public void setStock(int stock){
         this.stock = stock;
+    }
+
+    public int getVentas(){
+        return ventas;
+    }
+
+    public void setVentas(int ventas){
+        this.ventas = ventas;
+    }
+
+    public void incrementarVentas(int cantidad){
+        ventas += cantidad;
     }
 
     @Override
