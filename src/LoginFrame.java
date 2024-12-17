@@ -37,7 +37,25 @@ public class LoginFrame extends JFrame{
         userPanel.add(txtUsuario);
         panel.add(userPanel);
 
-   
+        // Campo de contraseña
+        JPanel passPanel = new JPanel();
+        passPanel.setLayout(new BoxLayout(passPanel, BoxLayout.Y_AXIS));
+        JLabel lblPassword = new JLabel("Contraseña: ");
+        JPasswordField txtPassword = new JPasswordField();
+        lblPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+        txtPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passPanel.add(lblPassword);
+        passPanel.add(txtPassword);
+        panel.add(passPanel);
+
+        // Botón de inicio de sesión
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.Y_AXIS));
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Añadido margen superior al botón
+        JButton btnLogin = new JButton("Iniciar Sesión");
+        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnPanel.add(btnLogin);
+        panel.add(btnPanel);
 
         // Etiqueta de error
         JLabel lblError = new JLabel("", JLabel.CENTER);
