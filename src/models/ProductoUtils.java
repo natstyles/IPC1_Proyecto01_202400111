@@ -82,12 +82,12 @@ public class ProductoUtils {
             //ORDENAMIENTO BURBUJA
             for(int i = 0; i < listaProductos.size() -1; i++){
                 for(int j = 0; j < listaProductos.size() - i - 1; j++){
-                    //if(listaProductos.get(j).getVentas() < listaProductos.get(j + 1).getVentas()){
+                    if(listaProductos.get(j).getVentas() < listaProductos.get(j + 1).getVentas()){
                         //INTERCAMBIAR PRODUCTOS
-                        //Producto temp = listaProductos.get(j);
-                        //listaProductos.set(j, listaProductos.get(j + 1));
-                        //listaProductos.set(j + 1, temp);
-                    //}
+                        Producto temp = listaProductos.get(j);
+                        listaProductos.set(j, listaProductos.get(j + 1));
+                        listaProductos.set(j + 1, temp);
+                    }
                 }
             }
 
@@ -114,8 +114,8 @@ public class ProductoUtils {
                 int limite = Math.min(5, listaProductos.size());
                 for(int i = 0; i < limite; i++){
                     Producto p = listaProductos.get(i);
-                    //writer.printf("<tr><td>%s</td><td>Q%.2f</td><td>%d</td><td>%d</td></tr>%n",
-                            //p.getNombre(), p.getPrecio(), p.getStock(), p.getVentas());
+                    writer.printf("<tr><td>%s</td><td>Q%.2f</td><td>%d</td><td>%d</td></tr>%n",
+                            p.getNombre(), p.getPrecio(), p.getStock(), p.getVentas());
                 }
 
                 writer.println("</table>");

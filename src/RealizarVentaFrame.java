@@ -2,6 +2,9 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import models.Cliente;
 import models.Producto;
