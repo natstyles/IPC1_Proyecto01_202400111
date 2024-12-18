@@ -74,7 +74,7 @@ public class LoginFrame extends JFrame{
                 String pass = new String(txtPassword.getPassword());
 
                 //VALIDANDO CREDENCIALES
-                if(usuario.equals("skibidi") && pass.equals("toilet")){
+                if(usuario.equals("sensei_202400111") && pass.equals("ipc1_202400111")){
                     JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso", "Bienvenido!", JOptionPane.INFORMATION_MESSAGE);
                     //CERRAMOS VENTANA DE LOGIN
                     dispose();

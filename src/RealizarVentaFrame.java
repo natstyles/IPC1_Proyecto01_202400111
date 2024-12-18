@@ -1,6 +1,5 @@
 // LIBRERIAS
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,7 +8,6 @@ import java.util.List;
 import models.Cliente;
 import models.Producto;
 import models.ProductoUtils;
-import models.Cliente;
 import models.ClientesUtils;
 
 public class RealizarVentaFrame extends JFrame {
@@ -26,61 +24,62 @@ public class RealizarVentaFrame extends JFrame {
         setTitle("Realizar Venta");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout()); // NUEVO LAYOUT CENTRADO
 
-        // PANEL PRINCIPAL
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Espaciado entre componentes
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
 
         // TITULO
         JLabel lblTitulo = new JLabel("Realizar Venta", JLabel.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(lblTitulo);
-        mainPanel.add(Box.createVerticalStrut(20));
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        gbc.gridwidth = 2; // El título ocupa 2 columnas
+        add(lblTitulo, gbc);
+
+        // REINICIAR GRIDBAG PARA SIGUIENTES COMPONENTES
+        gbc.gridwidth = 1;
+        gbc.gridy++;
 
         // COMBOBOX DE CLIENTES
-        JPanel clientePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel lblCliente = new JLabel("Cliente:");
+        add(lblCliente, gbc);
+        gbc.gridx = 1;
         JComboBox<String> comboClientes = new JComboBox<>();
         for (Cliente cliente : listaClientes) {
             comboClientes.addItem(cliente.getNombre());
         }
-        clientePanel.add(lblCliente);
-        clientePanel.add(comboClientes);
-        mainPanel.add(clientePanel);
+        add(comboClientes, gbc);
 
-        // SELECCIÓN DE PRODUCTOS
-        JPanel productoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // REINICIAR PARA SIGUIENTE FILA
+        gbc.gridx = 0;
+        gbc.gridy++;
         JLabel lblProducto = new JLabel("Producto:");
+        add(lblProducto, gbc);
+        gbc.gridx = 1;
         JComboBox<String> comboProductos = new JComboBox<>();
         for (Producto producto : listaProductos) {
             comboProductos.addItem(producto.getNombre());
         }
-        productoPanel.add(lblProducto);
-        productoPanel.add(comboProductos);
-        mainPanel.add(productoPanel);
+        add(comboProductos, gbc);
 
-        // CAMPO PARA CANTIDAD
-        JPanel cantidadPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // CAMPO DE CANTIDAD
+        gbc.gridx = 0;
+        gbc.gridy++;
         JLabel lblCantidad = new JLabel("Cantidad:");
+        add(lblCantidad, gbc);
+        gbc.gridx = 1;
         JTextField txtCantidad = new JTextField(10);
-        cantidadPanel.add(lblCantidad);
-        cantidadPanel.add(txtCantidad);
-        mainPanel.add(cantidadPanel);
+        add(txtCantidad, gbc);
 
         // BOTON DE VENDER
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
         JButton btnVender = new JButton("Vender");
-        btnVender.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(btnVender);
-
-        // MENSAJE DE ERROR
-        JLabel lblError = new JLabel("", JLabel.CENTER);
-        lblError.setForeground(Color.RED);
-        lblError.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(lblError);
+        add(btnVender, gbc);
 
         // EVENTO DEL BOTON VENDER
         btnVender.addActionListener(e -> {
@@ -128,41 +127,47 @@ public class RealizarVentaFrame extends JFrame {
                         }
                     }
 
-                    // Guardar productos y clientes en los archivos
+                    // REGISTRAR LA VENTA EN EL ARCHIVO CSV
+                    try (PrintWriter writer = new PrintWriter(new FileWriter("ventas.csv", true))) {
+                        String fechaVenta = java.time.LocalDate.now().toString();
+                        double totalVenta = productoVender.getPrecio() * cantidad;
+
+                        String nitCliente = "";
+                        for (Cliente cliente : listaClientes) {
+                            if (cliente.getNombre().equals(clienteSeleccionado)) {
+                                nitCliente = cliente.getNit();
+                                break;
+                            }
+                        }
+
+                        writer.printf("%s;%s;%s;%d;%.2f;%.2f;%s%n",
+                                clienteSeleccionado, nitCliente, productoSeleccionado,
+                                cantidad, productoVender.getPrecio(), totalVenta, fechaVenta);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error al registrar la venta.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    // Guardar cambios
                     ProductoUtils.guardarProductosDesdeArchivo(listaProductos, "productos.csv");
                     ClientesUtils.guardarClientesEnArchivo(listaClientes, "clientes.csv");
 
-                    // Refrescar tabla de AdminFrame
                     adminFrame.refrescarTablaClientes();
 
-                    // Mostrar factura
-                    String factura = "Factura:\n" +
-                            "Cliente: " + clienteSeleccionado + "\n" +
-                            "Producto: " + productoSeleccionado + "\n" +
-                            "Cantidad: " + cantidad + "\n" +
-                            "Total: Q" + (productoVender.getPrecio() * cantidad) + "\n" +
-                            "Gracias por su compra!";
-                    JOptionPane.showMessageDialog(this, factura, "Venta Realizada", JOptionPane.INFORMATION_MESSAGE);
-
-                    //ACTUALIZAMOS LA TABLA EN ADMINFRAME
-                    adminFrame.refrescarTablaClientes();
-
-                    dispose(); // Cerrar ventana
+                    JOptionPane.showMessageDialog(this,
+                            "Factura:\nCliente: " + clienteSeleccionado +
+                                    "\nProducto: " + productoSeleccionado +
+                                    "\nCantidad: " + cantidad +
+                                    "\nTotal: Q" + (productoVender.getPrecio() * cantidad),
+                            "Venta Realizada", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Stock insuficiente. Disponible: " + productoVender.getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Stock insuficiente.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
-
-
-        // AÑADIR PANEL PRINCIPAL A LA VENTANA
-        add(mainPanel, BorderLayout.CENTER);
 
         // CENTRAR Y MOSTRAR VENTANA
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
-
 }

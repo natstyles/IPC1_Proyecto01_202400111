@@ -1,9 +1,12 @@
 //LIBRERIAS
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import models.Cliente;
 import models.Producto;
+import models.VentasUtils;
 
 public class ModuloVentasFrame extends JFrame{
     private List<Cliente> listaClientes;
@@ -62,8 +65,16 @@ public class ModuloVentasFrame extends JFrame{
         });
 
         btnReporteHistorico.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Generando reporte histórico...", "Reporte", JOptionPane.INFORMATION_MESSAGE);
-            // Llamar a metodo para generar reporte HTML
+            String rutaVentasCSV = "ventas.csv";
+            String rutaReporteHTML = "reporte_ventas.html";
+            VentasUtils.generarReporteVentasHTML(rutaVentasCSV, rutaReporteHTML);
+
+            // ABRIR AUTOMÁTICAMENTE EL ARCHIVO HTML
+            try {
+                Desktop.getDesktop().browse(new File(rutaReporteHTML).toURI());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "No se pudo abrir el reporte.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         btnVolver.addActionListener(e -> dispose());
